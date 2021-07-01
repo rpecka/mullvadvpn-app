@@ -1,4 +1,5 @@
 mod driver;
+mod path_monitor;
 mod windows;
 
 use crate::{
