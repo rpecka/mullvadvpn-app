@@ -495,6 +495,11 @@ impl PathMonitor {
                     }
                 };
 
+                if result.completion_key >= monitor.dir_contexts.len() {
+                    log::debug!("Ignoring out-of-bounds completion key");
+                    continue;
+                }
+
                 if result.bytes_returned == 0 {
                     let new_size = 2 * monitor.dir_contexts[result.completion_key].buffer.len();
                     monitor.dir_contexts[result.completion_key]
