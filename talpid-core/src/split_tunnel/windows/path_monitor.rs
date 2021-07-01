@@ -251,7 +251,7 @@ impl DirContext {
         Ok(DirContext {
             path: path.as_ref().to_path_buf(),
             dir_handle,
-            buffer: vec![0u32; 512],
+            buffer: vec![0u32; 1024],
             overlapped: unsafe { std::mem::zeroed() },
         })
     }
@@ -501,11 +501,7 @@ impl PathMonitor {
                 }
 
                 if result.bytes_returned == 0 {
-                    let new_size = 2 * monitor.dir_contexts[result.completion_key].buffer.len();
-                    monitor.dir_contexts[result.completion_key]
-                        .buffer
-                        .resize(new_size, 0);
-                    log::debug!("Resized change event buffer as it was too small");
+                    log::debug!("Change event buffer is empty");
                 }
 
                 if let Err(error) =
