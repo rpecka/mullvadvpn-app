@@ -1,4 +1,5 @@
 use std::{
+    cmp,
     ffi::OsString,
     fs, io,
     os::windows::{
@@ -20,6 +21,7 @@ use winapi::{
             PostQueuedCompletionStatus,
         },
         minwinbase::OVERLAPPED,
+        stringapiset::CompareStringOrdinal,
         winbase::{
             ReadDirectoryChangesW, FILE_FLAG_BACKUP_SEMANTICS, FILE_FLAG_OPEN_REPARSE_POINT,
             FILE_FLAG_OVERLAPPED, INFINITE,
@@ -34,6 +36,8 @@ use winapi::{
 };
 
 const PATH_MONITOR_COMPLETION_KEY_IGNORE: usize = usize::MAX;
+
+const CSTR_EQUAL: i32 = 2;
 
 const ANYSIZE_ARRAY: usize = 1;
 const SYMLINK_FLAG_RELATIVE: u32 = 0x00000001;
@@ -532,9 +536,26 @@ impl PathMonitor {
                         if path.prefix != monitor.dir_contexts[result.completion_key].path() {
                             continue;
                         }
-                        if path.tail.starts_with(file_name) {
-                            changed = true;
-                            break;
+                        if path.tail.len() < file_name.len() {
+                            continue;
+                        }
+                        let cmp_status = unsafe {
+                            CompareStringOrdinal(
+                                path.tail.as_ptr(),
+                                cmp::min(file_name.len(), path.tail.len()) as i32,
+                                file_name.as_ptr(),
+                                file_name.len() as i32,
+                                1,
+                            )
+                        };
+                        match cmp_status {
+                            CSTR_EQUAL => {
+                                log::debug!("A path changed!");
+                                changed = true;
+                                break;
+                            }
+                            0 => log::error!("Bug: CompareStringOrdinal failed"),
+                            _ => (),
                         }
                     }
 
