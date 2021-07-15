@@ -550,7 +550,6 @@ impl PathMonitor {
                         };
                         match cmp_status {
                             CSTR_EQUAL => {
-                                log::debug!("A path changed!");
                                 changed = true;
                                 break;
                             }
