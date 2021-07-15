@@ -1,5 +1,4 @@
 use std::{
-    cmp,
     ffi::OsString,
     fs, io,
     os::windows::{
@@ -542,7 +541,7 @@ impl PathMonitor {
                         let cmp_status = unsafe {
                             CompareStringOrdinal(
                                 path.tail.as_ptr(),
-                                cmp::min(file_name.len(), path.tail.len()) as i32,
+                                file_name.len() as i32,
                                 file_name.as_ptr(),
                                 file_name.len() as i32,
                                 1,
