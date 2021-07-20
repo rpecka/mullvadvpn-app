@@ -47,6 +47,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // MARK: - Application lifecycle
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        let rest = MullvadRest(protocolClasses: [CustomURLProtocol.self])
+        let networkTask = rest.getClientIPAddress().dataTask(payload: EmptyPayload()) { result in
+            switch result {
+            case .success(let ip):
+                print("Got client ip: \(ip)")
+            case .failure(let error):
+                print("Error: \(error)")
+            }
+        }
+
+        try! networkTask.get().resume()
+
+        // Exit
+        return true
+
         // Setup logging
         initLoggingSystem(bundleIdentifier: Bundle.main.bundleIdentifier!)
 

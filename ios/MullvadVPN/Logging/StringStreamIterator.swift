@@ -6,23 +6,32 @@
 //  Copyright © 2020 Mullvad VPN AB. All rights reserved.
 //
 
-#if DEBUG
-
 import Foundation
 
 class StringStreamIterator<Codec>: IteratorProtocol where Codec: UnicodeCodec {
-    let separator: Character
+    let separator: String
+    var frame: [Character] = []
 
     private var string = ""
     private var data = [Codec.CodeUnit]()
     private var parser = Codec.ForwardParser()
 
-    init(separator: Character) {
+    init(separator: String) {
         self.separator = separator
+    }
+
+    init(separator: Character) {
+        self.separator = String(separator)
     }
 
     func append<S>(bytes: S) where S: Sequence, S.Element == Codec.CodeUnit {
         data.append(contentsOf: bytes)
+    }
+
+    func getRemainingBytes() -> Data {
+        return data.withUnsafeBufferPointer { bufferPointer in
+            return Data(buffer: bufferPointer)
+        }
     }
 
     func next() -> String? {
@@ -35,24 +44,31 @@ class StringStreamIterator<Codec>: IteratorProtocol where Codec: UnicodeCodec {
             }
         }
 
+        let frameLength = separator.unicodeScalars.count
+
         while case .valid(let encodedScalar) = parser.parseScalar(from: &dataIterator) {
             let unicodeScalar = Codec.decode(encodedScalar)
             let character = Character(unicodeScalar)
 
             bytesRead += encodedScalar.count
 
-            if character == separator {
-                let returnString = string
-                string = ""
+            if frame.count < frameLength {
+                frame.append(character)
+            }
 
-                return returnString
-            } else {
-                string.append(character)
+            if frame.count == frameLength {
+                if String(frame) == separator {
+                    let returnString = string
+                    string = ""
+                    frame.removeAll()
+
+                    return returnString
+                } else {
+                    string.append(frame.removeFirst())
+                }
             }
         }
 
         return nil
     }
 }
-
-#endif

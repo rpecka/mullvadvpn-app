@@ -430,9 +430,12 @@ class MullvadRest {
         }
     }
 
-    init() {
+    init(protocolClasses: [AnyClass] = []) {
+        var sessionConfiguration = URLSessionConfiguration.ephemeral
+        sessionConfiguration.protocolClasses = protocolClasses
+
         sessionDelegate = SSLPinningURLSessionDelegate(trustedRootCertificates: Self.trustedRootCertificates)
-        session = URLSession(configuration: .ephemeral, delegate: sessionDelegate, delegateQueue: nil)
+        session = URLSession(configuration: sessionConfiguration, delegate: sessionDelegate, delegateQueue: nil)
     }
 
     func createAccount() -> RestSessionEndpoint<EmptyPayload, AccountResponse> {
@@ -469,6 +472,10 @@ class MullvadRest {
 
     func sendProblemReport() -> RestSessionEndpoint<ProblemReportRequest, ()> {
         return RestSessionEndpoint(session: session, endpoint: Self.sendProblemReport())
+    }
+
+    func getClientIPAddress() -> RestSessionEndpoint<EmptyPayload, String> {
+        return RestSessionEndpoint(session: session, endpoint: Self.getClientIPAddress())
     }
 }
 
@@ -593,6 +600,22 @@ extension MullvadRest {
                 return EmptyResponseHandler(expectedStatus: HttpStatus.noContent)
             }
         )
+    }
+
+    static func getClientIPAddress() -> RestEndpoint<EmptyPayload, String> {
+        return RestEndpoint(
+            endpointURL: URL(string: "https://am.i.mullvad.net/ip")!,
+            httpMethod: .get) { (input) in
+                return AnyResponseHandler { (response, data) -> Result<String, ResponseHandlerError> in
+                    if response.statusCode == HttpStatus.ok {
+                        let string = String(data: data, encoding: .utf8) ?? ""
+
+                        return .success(string.trimmingCharacters(in: .whitespacesAndNewlines))
+                    } else {
+                        return .failure(.badResponse(response.statusCode))
+                    }
+                }
+            }
     }
 
     /// Returns a JSON encoder used by REST API
