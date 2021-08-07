@@ -68,6 +68,7 @@
 		414F35E726BE5D1B00867820 /* SimulatorTunnelProviderHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 587A01FB23F1F0BE00B68763 /* SimulatorTunnelProviderHost.swift */; };
 		414F35E826BE5D3600867820 /* RelaySelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58781CD422AFBA39009B9D8E /* RelaySelector.swift */; };
 		414F35E926BE5D4000867820 /* MullvadEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5840250322B11AB700E4CFEC /* MullvadEndpoint.swift */; };
+		414F35EA26BE62E600867820 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 414F35E426BE582B00867820 /* NetworkExtension.framework */; };
 		5807E2C02432038B00F5FF30 /* String+Split.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5807E2BF2432038B00F5FF30 /* String+Split.swift */; };
 		5807E2C2243203D000F5FF30 /* StringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5807E2C1243203D000F5FF30 /* StringTests.swift */; };
 		5807E2C3243203E700F5FF30 /* String+Split.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5807E2BF2432038B00F5FF30 /* String+Split.swift */; };
@@ -573,6 +574,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				414F35C426BD11E200867820 /* Logging in Frameworks */,
+				414F35EA26BE62E600867820 /* NetworkExtension.framework in Frameworks */,
 				414F35B126BD0ADB00867820 /* WireGuardKit in Frameworks */,
 				414F359F26BD02F900867820 /* Intents.framework in Frameworks */,
 			);
@@ -1716,6 +1718,7 @@
 				CODE_SIGN_ENTITLEMENTS = MullvadVPNIntents/MullvadVPNIntents.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = J2TP756DEM;
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = MullvadVPNIntents/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1738,6 +1741,7 @@
 				CODE_SIGN_ENTITLEMENTS = MullvadVPNIntents/MullvadVPNIntents.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = CKG9MXH72F;
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = MullvadVPNIntents/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = (
