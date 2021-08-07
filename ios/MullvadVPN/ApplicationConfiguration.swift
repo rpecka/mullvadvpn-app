@@ -13,10 +13,10 @@ enum ApplicationConfiguration {}
 extension ApplicationConfiguration {
 
     /// The application group identifier used for sharing application preferences between processes
-    static let securityGroupIdentifier = "group.net.mullvad.MullvadVPN"
+    static let securityGroupIdentifier = "group.xyz.pecka.MullvadVPN"
 
     /// The application identifier for the PacketTunnel extension
-    static let packetTunnelExtensionIdentifier = "net.mullvad.MullvadVPN.PacketTunnel"
+    static let packetTunnelExtensionIdentifier = "xyz.pecka.MullvadVPN.PacketTunnel"
 
     /// Container URL for security group
     static var containerURL: URL? {

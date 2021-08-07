@@ -11,6 +11,8 @@ import NetworkExtension
 import StoreKit
 import Logging
 
+fileprivate let GroupDefaults = UserDefaults(suiteName: "group.xyz.pecka.MullvadVPN")!
+
 /// A enum holding the `UserDefaults` string keys
 private enum UserDefaultsKeys: String {
     case isAgreedToTermsOfService = "isAgreedToTermsOfService"
@@ -71,16 +73,16 @@ class Account {
 
     /// Returns true if user agreed to terms of service, otherwise false
     var isAgreedToTermsOfService: Bool {
-        return UserDefaults.standard.bool(forKey: UserDefaultsKeys.isAgreedToTermsOfService.rawValue)
+        return GroupDefaults.bool(forKey: UserDefaultsKeys.isAgreedToTermsOfService.rawValue)
     }
 
     /// Returns the currently used account token
     private(set) var token: String? {
         set {
-            UserDefaults.standard.set(newValue, forKey: UserDefaultsKeys.accountToken.rawValue)
+            GroupDefaults.set(newValue, forKey: UserDefaultsKeys.accountToken.rawValue)
         }
         get {
-            return UserDefaults.standard.string(forKey: UserDefaultsKeys.accountToken.rawValue)
+            return GroupDefaults.string(forKey: UserDefaultsKeys.accountToken.rawValue)
         }
     }
 
@@ -91,10 +93,10 @@ class Account {
     /// Returns the account expiry for the currently used account token
     private(set) var expiry: Date? {
         set {
-            UserDefaults.standard.set(newValue, forKey: UserDefaultsKeys.accountExpiry.rawValue)
+            GroupDefaults.set(newValue, forKey: UserDefaultsKeys.accountExpiry.rawValue)
         }
         get {
-            return UserDefaults.standard.object(forKey: UserDefaultsKeys.accountExpiry.rawValue) as? Date
+            return GroupDefaults.object(forKey: UserDefaultsKeys.accountExpiry.rawValue) as? Date
         }
     }
 
@@ -112,7 +114,7 @@ class Account {
 
     /// Save the boolean flag in preferences indicating that the user agreed to terms of service.
     func agreeToTermsOfService() {
-        UserDefaults.standard.set(true, forKey: UserDefaultsKeys.isAgreedToTermsOfService.rawValue)
+        GroupDefaults.set(true, forKey: UserDefaultsKeys.isAgreedToTermsOfService.rawValue)
     }
 
     func loginWithNewAccount(completionHandler: @escaping (Result<AccountResponse, Error>) -> Void) {
@@ -259,7 +261,7 @@ class Account {
     }
 
     private func removeFromPreferences() {
-        let preferences = UserDefaults.standard
+        let preferences = GroupDefaults
 
         preferences.removeObject(forKey: UserDefaultsKeys.accountToken.rawValue)
         preferences.removeObject(forKey: UserDefaultsKeys.accountExpiry.rawValue)

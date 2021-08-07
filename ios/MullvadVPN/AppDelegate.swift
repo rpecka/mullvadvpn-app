@@ -9,6 +9,7 @@
 import UIKit
 import StoreKit
 import UserNotifications
+import Intents
 import Logging
 
 @UIApplicationMain
@@ -134,6 +135,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         TunnelManager.shared.refreshTunnelState(completionHandler: nil)
+    }
+
+    func application(_ application: UIApplication, handle intent: INIntent, completionHandler: @escaping (INIntentResponse) -> Void) {
+        print("hi")
     }
 
     // MARK: - Private
